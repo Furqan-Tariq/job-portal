@@ -65,9 +65,11 @@ export function SiteHeader() {
                 For Employers
               </Button>
             </Link>
-            <Button variant="outline" className="hidden md:block">
-              Announce
-            </Button>
+            <Link href="/employer/login">
+              <Button variant="outline" className="hidden md:block">
+                Announce
+              </Button>
+            </Link>
           </div>
         </div>
       </nav>

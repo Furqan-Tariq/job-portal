@@ -12,6 +12,7 @@ export interface Employer {
   logo: string
   description?: string
   imageQuery?: string
+  featuredImage?: string
 }
 
 export interface Job {
