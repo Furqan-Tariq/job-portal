@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react"
 import { Employer } from "@/lib/types"
-import { Card } from "@/components/ui/Card"
+import { Card } from "@/components/ui/card"
 import Image from "next/image"
 import Link from "next/link"
 

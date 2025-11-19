@@ -1,5 +1,5 @@
 import { Job } from '@/lib/types'
-import { Card } from '@/components/ui/Card'
+import { Card } from '@/components/ui/card'
 import Link from 'next/link'
 
 interface HomeFeaturedJobsProps {

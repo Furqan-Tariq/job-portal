@@ -1,5 +1,5 @@
 import { VideoHighlight } from '@/lib/types'
-import { Card } from '@/components/ui/Card'
+import { Card } from '@/components/ui/card'
 
 interface HomeVideoHighlightsProps {
   videos: VideoHighlight[]
