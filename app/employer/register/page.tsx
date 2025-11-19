@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Eye, EyeOff, Lock, Building2, Mail, CheckCircle2, Briefcase } from 'lucide-react'
-import { Button } from '@/components/ui/button' // 👈 match your existing Button file
+import { Button } from '../../../components/ui/button' // 👈 match your existing Button file
 import Link from "next/link"
 export default function EmployerRegisterPage() {
   const [showPassword, setShowPassword] = useState(false)
