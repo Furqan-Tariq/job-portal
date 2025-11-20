@@ -1,4 +1,5 @@
 import { EmployerSidebar } from "@/components/employer-home/EmployerSidebar"
+import { EmployerHeader } from "@/components/employer-home/EmployerHeader"
 import { EmployerFooter } from "@/components/employer-home/EmployerFooter"
 import { WelcomeBanner } from "@/components/employer-home/WelcomeBanner"
 import { VerificationCard } from "@/components/employer-home/VerificationCard"
@@ -20,49 +21,7 @@ export default function EmployerDashboard() {
       {/* Right side: header + main content + footer */}
       <div className="flex flex-1 flex-col">
         {/* HEADER */}
-        <header className="bg-white border-b border-border">
-          <div className="container-custom flex items-center justify-between py-4">
-            {/* Logo + nav */}
-            {/* (3) Increase gap between logo and nav links via gap-10 */}
-            <div className="flex items-center gap-16">
-              <div className="flex items-center gap-3 mr-4">
-                <Image
-                  src="/logo.png"
-                  alt="Oberland JOBS"
-                  width={140}
-                  height={40}
-                />
-              </div>
-
-              <nav className="flex items-center gap-6 text-sm font-medium text-text-secondary">
-                <Link href="#" className="hover:text-text-primary">
-                  Product
-                </Link>
-                <Link href="#" className="hover:text-text-primary">
-                  Shop
-                </Link>
-              </nav>
-            </div>
-
-            {/* Right header controls */}
-            <div className="flex items-center gap-4">
-              {/* (4) FB button has primary (orange) background by default */}
-              <Button
-                size="icon"
-                className="bg-primary text-text-white hover:bg-primary-dark rounded-full h-10 w-10 flex items-center justify-center"
-                aria-label="Facebook"
-                >
-                <Facebook className="h-4 w-4" />
-            </Button>
-
-              <Button className="bg-primary text-text-white hover:bg-primary-dark">
-                For Employers
-              </Button>
-
-              <UserMenu />
-            </div>
-          </div>
-        </header>
+        <EmployerHeader />
 
         {/* MAIN CONTENT */}
         <main className="flex-1">
