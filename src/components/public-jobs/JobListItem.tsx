@@ -1,7 +1,6 @@
 "use client"
 
 import Image from "next/image"
-import { Badge } from "@/components/ui/badge"
 import { MapPin, Briefcase, Zap } from "lucide-react"
 import type { Job } from "./JobsPageShell"
 import { cn } from "@/lib/utils"
@@ -33,14 +32,14 @@ export function JobListItem({ job, isSelected, onClick }: JobListItemProps) {
         <div className="flex-1 min-w-0 space-y-1">
           <div className="flex items-start justify-between gap-2">
             <h3 className="font-semibold text-[#FDB714] leading-tight line-clamp-1">{job.title}</h3>
+
             {job.isTopJob && (
-              <Badge variant="secondary" className="flex-shrink-0 bg-[#FDB714] text-white">
+              <span className="flex-shrink-0 inline-flex items-center rounded-full bg-[#FDB714] px-2 py-0.5 text-[11px] font-semibold text-white">
                 <Briefcase className="h-3 w-3 mr-1" />
                 Top Job
-              </Badge>
+              </span>
             )}
           </div>
-
 
           <p className="text-sm font-medium text-foreground line-clamp-1">{job.companyName}</p>
 

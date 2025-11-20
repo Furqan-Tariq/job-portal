@@ -1,6 +1,6 @@
+import { ReactNode } from "react"
 import Image from "next/image"
 import { Card } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { MapPin, Briefcase, Building, Zap, Mail } from "lucide-react"
@@ -55,6 +55,14 @@ const JOB_DETAIL_CONTENT = {
   },
 }
 
+function TagPill({ children }: { children: ReactNode }) {
+  return (
+    <span className="inline-flex items-center rounded-full border border-border bg-background px-2 py-0.5 text-xs font-medium text-muted-foreground">
+      {children}
+    </span>
+  )
+}
+
 export function JobDetailPanel({ job }: JobDetailPanelProps) {
   if (!job) {
     return (
@@ -90,10 +98,10 @@ export function JobDetailPanel({ job }: JobDetailPanelProps) {
             </div>
 
             {job.isTopJob && (
-              <Badge className="bg-[#FDB714] text-white">
+              <span className="inline-flex items-center rounded-full bg-[#FDB714] px-3 py-1 text-xs font-semibold text-white">
                 <Briefcase className="h-3 w-3 mr-1" />
                 Top Job
-              </Badge>
+              </span>
             )}
           </div>
 
@@ -111,9 +119,9 @@ export function JobDetailPanel({ job }: JobDetailPanelProps) {
 
           {/* Meta Tags */}
           <div className="flex flex-wrap gap-2">
-            <Badge variant="outline">{job.industry}</Badge>
-            <Badge variant="outline">{job.employmentType}</Badge>
-            <Badge variant="outline">With professional experience ({job.workExperience.toLowerCase()})</Badge>
+            <TagPill>{job.industry}</TagPill>
+            <TagPill>{job.employmentType}</TagPill>
+            <TagPill>With professional experience ({job.workExperience.toLowerCase()})</TagPill>
           </div>
 
           {/* Job Description */}
