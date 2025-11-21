@@ -38,13 +38,15 @@ export function JobDetailLayout({ job }: JobDetailLayoutProps) {
                     <ChevronRight className="w-4 h-4" />
                     <span className="text-foreground">{job.title}</span>
                   </div>
-                  <Button
-                    size="lg"
-                    className="bg-[#FDB714] hover:bg-[#FDB714]/90 text-primary-foreground whitespace-nowrap"
-                  >
-                    <Briefcase className="w-4 h-4 mr-2" />
-                    Apply
-                  </Button>
+                  <Link href={`/public/jobs/${job.id}/apply`}>
+                    <Button
+                        size="lg"
+                        className="bg-[#FDB714] hover:bg-[#FDB714]/90 text-primary-foreground whitespace-nowrap"
+                    >
+                        <Briefcase className="w-4 h-4 mr-2" />
+                        Apply
+                    </Button>
+                </Link>
                 </div>
               </div>
 
