@@ -1,5 +1,9 @@
 "use client"
 
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { apiFetch } from "@/lib/api"
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,6 +14,33 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 export function UserMenu() {
+  const router = useRouter()
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true)
+
+    try {
+      // 🔥 Automatically sends Authorization: Bearer <token>
+      await apiFetch("/logout", {
+        method: "POST",
+      })
+    } catch (err) {
+      console.error("Logout error:", err)
+      // Continue anyway
+    } finally {
+      // ❌ Remove token no matter what
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("token")
+      }
+
+      // Redirect user to login page
+      router.push("/employer/login")
+
+      setIsLoggingOut(false)
+    }
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -18,7 +49,6 @@ export function UserMenu() {
         </button>
       </DropdownMenuTrigger>
 
-      {/* FIX FOR ISSUE #1 → Added bg-white and border */}
       <DropdownMenuContent
         align="end"
         className="w-44 bg-white border border-border shadow-lg rounded-md"
@@ -26,8 +56,17 @@ export function UserMenu() {
         <DropdownMenuLabel className="text-text-primary">My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem>Settings</DropdownMenuItem>
-        <DropdownMenuItem className="text-destructive">Logout</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => router.push("/employer/settings")}>
+          Settings
+        </DropdownMenuItem>
+
+        {/* LOGOUT BUTTON */}
+        <DropdownMenuItem
+          onClick={handleLogout}
+          className="text-destructive cursor-pointer"
+        >
+          {isLoggingOut ? "Logging out..." : "Logout"}
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )
