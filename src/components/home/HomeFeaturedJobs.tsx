@@ -12,7 +12,7 @@ export function HomeFeaturedJobs({ jobs }: HomeFeaturedJobsProps) {
       <div className="container-custom">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-800">TopJobs</h2>
-          <Link href="/jobs" className="text-gray-700 hover:text-gray-900 font-medium flex items-center gap-2">
+          <Link href="/public/jobs" className="text-gray-700 hover:text-gray-900 font-medium flex items-center gap-2">
             <span className="text-2xl">+</span>
             View all jobs
           </Link>

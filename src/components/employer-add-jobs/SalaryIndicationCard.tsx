@@ -1,49 +1,98 @@
+"use client"
+
+import { useEffect, useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
-export function SalaryIndicationCard() {
+export type SalaryIndicationData = {
+  minSalary: string
+  maxSalary: string
+  salaryUnit: string
+}
+
+type SalaryIndicationCardProps = {
+  value?: SalaryIndicationData
+  onChange: (value: SalaryIndicationData) => void
+}
+
+export function SalaryIndicationCard({
+  value,
+  onChange,
+}: SalaryIndicationCardProps) {
+  const [minSalary, setMinSalary] = useState(value?.minSalary ?? "")
+  const [maxSalary, setMaxSalary] = useState(value?.maxSalary ?? "")
+  const [salaryUnit, setSalaryUnit] = useState(value?.salaryUnit ?? "")
+
+  useEffect(() => {
+    onChange({
+      minSalary,
+      maxSalary,
+      salaryUnit,
+    })
+  }, [minSalary, maxSalary, salaryUnit, onChange])
+
   return (
     <Card>
       <CardContent className="p-6">
         <div className="md:grid md:grid-cols-3 md:gap-8">
-          {/* Left Description Column */}
+
+          {/* Left Column */}
           <div className="mb-6 md:mb-0">
-            <h3 className="text-lg font-semibold text-foreground mb-3">SALARYINDICATION</h3>
-            <div className="text-sm text-muted-foreground space-y-2">
-              <p>
-                To optimize your job ad for Google for Jobs while meeting candidates&apos; needs, we recommend providing
-                a salary range. This increases the findability of your ad by enriching relevant data and fulfills the
-                desire of over 60% of female applicants for salary transparency
-              </p>
-            </div>
+            <h3 className="text-lg font-semibold text-foreground mb-3">
+              SALARY INDICATION
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              Providing a salary range increases job discoverability on Google for Jobs.
+            </p>
           </div>
 
-          {/* Right Form Column */}
+          {/* Right Column */}
           <div className="md:col-span-2 space-y-4">
             <h4 className="text-base font-semibold">Salary range</h4>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {/* Minimum salary */}
+
+              {/* Min salary */}
               <div className="space-y-2">
                 <Label htmlFor="min-salary" className="text-sm font-semibold">
                   Minimum salary
                 </Label>
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">€</span>
-                  <Input id="min-salary" type="number" placeholder="0" className="text-base pl-8" />
+                  <Input
+                    id="min-salary"
+                    type="number"
+                    className="pl-8"
+                    placeholder="0"
+                    value={minSalary}
+                    onChange={(e) => setMinSalary(e.target.value)}
+                  />
                 </div>
               </div>
 
-              {/* Maximum salary */}
+              {/* Max salary */}
               <div className="space-y-2">
                 <Label htmlFor="max-salary" className="text-sm font-semibold">
                   Maximum salary
                 </Label>
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">€</span>
-                  <Input id="max-salary" type="number" placeholder="0" className="text-base pl-8" />
+                  <Input
+                    id="max-salary"
+                    type="number"
+                    className="pl-8"
+                    placeholder="0"
+                    value={maxSalary}
+                    onChange={(e) => setMaxSalary(e.target.value)}
+                  />
                 </div>
               </div>
 
@@ -52,7 +101,10 @@ export function SalaryIndicationCard() {
                 <Label htmlFor="salary-unit" className="text-sm font-semibold">
                   Salary unit
                 </Label>
-                <Select>
+                <Select
+                  value={salaryUnit}
+                  onValueChange={setSalaryUnit}
+                >
                   <SelectTrigger id="salary-unit" className="text-base">
                     <SelectValue placeholder="-- Please Select --" />
                   </SelectTrigger>
@@ -65,8 +117,11 @@ export function SalaryIndicationCard() {
               </div>
             </div>
 
-            <p className="text-sm text-muted-foreground">Provide a salary range for this job.</p>
+            <p className="text-sm text-muted-foreground">
+              Provide a salary range for this job.
+            </p>
           </div>
+
         </div>
       </CardContent>
     </Card>

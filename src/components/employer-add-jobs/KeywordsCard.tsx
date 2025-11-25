@@ -1,20 +1,81 @@
+"use client"
+
+import { useEffect, useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
-export function KeywordsCard() {
+export type KeywordsData = {
+  employmentType: string
+  education: string
+  experience: string
+  discipline: string
+  subject: string
+  languages: string
+  skills: string
+}
+
+type KeywordsCardProps = {
+  value?: KeywordsData
+  onChange: (value: KeywordsData) => void
+}
+
+export function KeywordsCard({ value, onChange }: KeywordsCardProps) {
+  const [employmentType, setEmploymentType] = useState(
+    value?.employmentType ?? ""
+  )
+  const [education, setEducation] = useState(value?.education ?? "")
+  const [experience, setExperience] = useState(value?.experience ?? "")
+  const [discipline, setDiscipline] = useState(value?.discipline ?? "")
+  const [subject, setSubject] = useState(value?.subject ?? "")
+  const [languages, setLanguages] = useState(value?.languages ?? "")
+  const [skills, setSkills] = useState(value?.skills ?? "")
+
+  // Sync up to parent whenever something changes
+  useEffect(() => {
+    onChange({
+      employmentType,
+      education,
+      experience,
+      discipline,
+      subject,
+      languages,
+      skills,
+    })
+  }, [
+    employmentType,
+    education,
+    experience,
+    discipline,
+    subject,
+    languages,
+    skills,
+    onChange,
+  ])
+
   return (
     <Card>
       <CardContent className="p-6">
         <div className="md:grid md:grid-cols-3 md:gap-8">
           {/* Left Description Column */}
           <div className="mb-6 md:mb-0">
-            <h3 className="text-lg font-semibold text-foreground mb-3">KEYWORDS OF THE JOB AD</h3>
+            <h3 className="text-lg font-semibold text-foreground mb-3">
+              KEYWORDS OF THE JOB AD
+            </h3>
             <div className="text-sm text-muted-foreground space-y-2">
-              <p className="font-medium text-primary">TIP: Always be aware of the following:</p>
+              <p className="font-medium text-primary">
+                TIP: Always be aware of the following:
+              </p>
               <p>
-                Think about what candidates are most likely to look for. Here&apos;s how to find the best keywords.
+                Think about what candidates are most likely to look for.
+                Here&apos;s how to find the best keywords.
               </p>
             </div>
           </div>
@@ -26,7 +87,10 @@ export function KeywordsCard() {
               <Label htmlFor="employment-type" className="text-base font-semibold">
                 Type of employment <span className="text-destructive">*</span>
               </Label>
-              <Select>
+              <Select
+                value={employmentType}
+                onValueChange={setEmploymentType}
+              >
                 <SelectTrigger
                   id="employment-type"
                   className="h-11 text-base bg-background border border-input"
@@ -34,7 +98,6 @@ export function KeywordsCard() {
                   <SelectValue placeholder="-- Please Select --" />
                 </SelectTrigger>
                 <SelectContent className="bg-white">
-                  {/* Sorted alphabetically by label */}
                   <SelectItem value="apprenticeship">Apprenticeship</SelectItem>
                   <SelectItem value="full-time">Full-Time</SelectItem>
                   <SelectItem value="part-time">Part-Time</SelectItem>
@@ -50,7 +113,10 @@ export function KeywordsCard() {
               <Label htmlFor="education" className="text-base font-semibold">
                 Required educational qualification
               </Label>
-              <Select>
+              <Select
+                value={education}
+                onValueChange={setEducation}
+              >
                 <SelectTrigger
                   id="education"
                   className="h-11 text-base bg-background border border-input"
@@ -58,9 +124,8 @@ export function KeywordsCard() {
                   <SelectValue placeholder="-- Please Select --" />
                 </SelectTrigger>
                 <SelectContent className="bg-white">
-                  {/* Sorted alphabetically by label */}
                   <SelectItem value="enrolled-student">Enrolled Student</SelectItem>
-                  <SelectItem value="graudate">Graudate</SelectItem>
+                  <SelectItem value="graduate">Graduate</SelectItem>
                   <SelectItem value="technician">Technician</SelectItem>
                 </SelectContent>
               </Select>
@@ -74,7 +139,10 @@ export function KeywordsCard() {
               <Label htmlFor="experience" className="text-base font-semibold">
                 Professional experience
               </Label>
-              <Select>
+              <Select
+                value={experience}
+                onValueChange={setExperience}
+              >
                 <SelectTrigger
                   id="experience"
                   className="h-11 text-base bg-background border border-input"
@@ -83,8 +151,8 @@ export function KeywordsCard() {
                 </SelectTrigger>
                 <SelectContent className="bg-white">
                   <SelectItem value="entry">Entry level</SelectItem>
-                  <SelectItem value="1-3">1-3 years</SelectItem>
-                  <SelectItem value="3-5">3-5 years</SelectItem>
+                  <SelectItem value="1-3">1–3 years</SelectItem>
+                  <SelectItem value="3-5">3–5 years</SelectItem>
                   <SelectItem value="5+">5+ years</SelectItem>
                   <SelectItem value="senior">Senior level</SelectItem>
                 </SelectContent>
@@ -99,7 +167,10 @@ export function KeywordsCard() {
               <Label htmlFor="discipline" className="text-base font-semibold">
                 Discipline <span className="text-destructive">*</span>
               </Label>
-              <Select>
+              <Select
+                value={discipline}
+                onValueChange={setDiscipline}
+              >
                 <SelectTrigger
                   id="discipline"
                   className="h-11 text-base bg-background border border-input"
@@ -107,7 +178,6 @@ export function KeywordsCard() {
                   <SelectValue placeholder="-- Please Select --" />
                 </SelectTrigger>
                 <SelectContent className="bg-white">
-                  {/* Sorted alphabetically by label */}
                   <SelectItem value="art">Art</SelectItem>
                   <SelectItem value="engineering">Engineering</SelectItem>
                   <SelectItem value="health">Health</SelectItem>
@@ -123,7 +193,10 @@ export function KeywordsCard() {
               <Label htmlFor="subject" className="text-base font-semibold">
                 Subject
               </Label>
-              <Select>
+              <Select
+                value={subject}
+                onValueChange={setSubject}
+              >
                 <SelectTrigger
                   id="subject"
                   className="h-11 text-base bg-background border border-input"
@@ -131,8 +204,7 @@ export function KeywordsCard() {
                   <SelectValue placeholder="-- Please Select --" />
                 </SelectTrigger>
                 <SelectContent className="bg-white">
-                  {/* Sorted alphabetically by label */}
-                  <SelectItem value="architecure">Architecure</SelectItem>
+                  <SelectItem value="architecture">Architecture</SelectItem>
                   <SelectItem value="biology">Biology</SelectItem>
                   <SelectItem value="chemistry">Chemistry</SelectItem>
                 </SelectContent>
@@ -147,7 +219,10 @@ export function KeywordsCard() {
               <Label htmlFor="languages" className="text-base font-semibold">
                 Required language skills
               </Label>
-              <Select>
+              <Select
+                value={languages}
+                onValueChange={setLanguages}
+              >
                 <SelectTrigger
                   id="languages"
                   className="h-11 text-base bg-background border border-input"
@@ -155,7 +230,6 @@ export function KeywordsCard() {
                   <SelectValue placeholder="-- Please Select --" />
                 </SelectTrigger>
                 <SelectContent className="bg-white">
-                  {/* Sorted alphabetically by label */}
                   <SelectItem value="arabic">Arabic</SelectItem>
                   <SelectItem value="english">English</SelectItem>
                   <SelectItem value="french">French</SelectItem>
@@ -171,7 +245,13 @@ export function KeywordsCard() {
               <Label htmlFor="skills" className="text-base font-semibold">
                 Required Skills
               </Label>
-              <Input id="skills" placeholder="Please type..." className="text-base" />
+              <Input
+                id="skills"
+                placeholder="Please type..."
+                className="text-base"
+                value={skills}
+                onChange={(e) => setSkills(e.target.value)}
+              />
               <p className="text-sm text-muted-foreground">
                 Please indicate all skills that applicants should have.
               </p>

@@ -8,41 +8,106 @@ import type { EmployerJob } from "@/components/all-jobs/types"
 import { Plus } from "lucide-react"
 import Link from "next/link"
 
-// ---- Mock data & fake API layer ----
+// ---- Real API integration layer ----
 
-const BASE_JOB: Omit<EmployerJob, "id" | "searchIndex" | "title" | "location"> = {
-  companyName: "Example Clinic GmbH",
-  status: "Draft",  // now allowed 🎉
-  source: "Any Source",
-  employmentType: "Any type of employment",
-  applicationWorkflow: "Any application workflow",
-  frontendType: "Any frontend",
-  description:
-    "This is a sample job ad used for the employer overview...",
-  statisticsSummary: "Statistics: not specified",
-  createdAt: "2025-01-01",
-  updatedAt: "2025-01-10",
-}
+// Adjust to match your deployed backend base URL
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
-const MOCK_JOBS: EmployerJob[] = Array.from({ length: 6 }).map((_, index) => {
-  const title = index % 2 === 0 ? "fff" : "Medical Assistant (m/f/d)"
-  const location =
-    "ffffff, Kasselgrund 1, 63599 Biebergemünd, Germany"
+function mapApiJobToEmployerJob(apiJob: any): EmployerJob {
+  const title: string = apiJob.title ?? "Untitled job"
+
+  const location: string =
+    apiJob.workplace_location ??      // 👈 use backend workplace_location first
+    apiJob.location ??
+    apiJob.address ??
+    "Location not specified"
+
+  const companyName: string = apiJob.company_name ?? "Unknown company"
 
   return {
-    ...BASE_JOB,
-    id: `JOB-${index + 1}`,
+    // required fields
+    id: String(apiJob.id ?? ""),
     title,
     location,
-    status: index === 0 ? "Draft" : index % 2 === 0 ? "Active" : "Expired",
-    searchIndex: `${title} ${location} ${BASE_JOB.companyName}`.toLowerCase(),
+    companyName,
+
+    // status / meta (fallbacks keep filters working)
+    status: apiJob.status ?? "Draft",
+    source: apiJob.source ?? "Any Source",
+    employmentType: apiJob.employment_types?.[0] ?? "Any type of employment",
+    applicationWorkflow:
+      apiJob.application_workflow ?? "Any application workflow",
+    frontendType: apiJob.frontend_type ?? "Any frontend",
+
+    description:
+      apiJob.description ??
+      "No description has been provided for this job ad yet.",
+    statisticsSummary:
+      apiJob.statistics_summary ?? "Statistics: not available yet",
+
+    createdAt: apiJob.created_at ?? "",
+    updatedAt: apiJob.updated_at ?? "",
+
+    // used for free-text search
+    searchIndex: `${title} ${location} ${companyName}`
+      .toLowerCase()
+      .trim(),
   }
-})
+}
+
 
 async function getEmployerJobs(): Promise<EmployerJob[]> {
-  // In production this will call the backend, e.g. fetch("/api/employer/jobs")
-  // The UI is already prepared to plug into that data source.
-  return Promise.resolve(MOCK_JOBS)
+  try {
+    if (!API_BASE_URL) {
+      throw new Error(
+        "NEXT_PUBLIC_API_BASE_URL is not set. Add it to your .env and Vercel project."
+      )
+    }
+
+    // adjust key if you store the token under a different name
+    const token =
+      typeof window !== "undefined" ? localStorage.getItem("token") : null
+
+    if (!token) {
+      throw new Error(
+        "No auth token found in localStorage. Make sure you store it after login."
+      )
+    }
+
+    const res = await fetch(`${API_BASE_URL}/jobs`, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+
+    if (!res.ok) {
+      let message = `Request failed with status ${res.status}`
+      try {
+        const body = (await res.json()) as { message?: string }
+        if (body?.message) message = body.message
+      } catch {
+        // ignore parse errors
+      }
+      throw new Error(message)
+    }
+
+    const data = await res.json()
+
+    // DEBUG LOG — this prints the raw API response exactly as it comes
+    console.log("🔥 RAW /jobs API RESPONSE:", data);
+
+    // If your API returns { data: [...] } instead of a bare array,
+    // this will handle both cases.
+    const rawJobs: any[] = Array.isArray(data) ? data : data.data ?? []
+
+    return rawJobs.map(mapApiJobToEmployerJob)
+  } catch (error) {
+    console.error("Failed to fetch employer jobs:", error)
+    // fail gracefully – just show no jobs instead of crashing the page
+    return []
+  }
 }
 
 // ---- Page Shell ----
@@ -133,7 +198,6 @@ export function AllJobsPageShell() {
 
   function handleApplyFilters() {
     // Filters are live; this is left as a hook for future behavior (e.g. server query).
-    // Keeping it so the "Apply" button already has a place to plug into.
   }
 
   return (
@@ -170,7 +234,7 @@ export function AllJobsPageShell() {
             size="lg"
             className="bg-[#FDB714] hover:bg-[#FDB714]/90 text-white px-8"
           >
-            <Link href="/employerjobs/add-job">
+            <Link href="/employer/jobs/add-job">
               <Plus className="w-4 h-4 mr-2" />
               Add a job ad
             </Link>

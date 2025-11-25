@@ -5,6 +5,7 @@ import { WelcomeBanner } from "@/components/employer-home/WelcomeBanner"
 import { VerificationCard } from "@/components/employer-home/VerificationCard"
 import { EmptyJobsCard } from "@/components/employer-home/EmptyJobsCard"
 import { UserMenu } from "@/components/employer-home/UserMenu"
+import { EmployerApplicationsSection } from "@/components/employer-home/EmployerApplicationsSection"
 
 import { Button } from "@/components/ui/button"
 import { Facebook, BriefcaseBusiness } from "lucide-react"
@@ -42,20 +43,7 @@ export default function EmployerDashboard() {
               </section>
 
               {/* Your applications */}
-              <section className="space-y-4 pb-10">
-                <h2 className="text-2xl font-semibold text-text-primary">
-                  Your applications
-                </h2>
-
-                <div className="bg-white rounded-lg shadow-sm p-10 flex flex-col items-center justify-center text-center space-y-4">
-                  <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center">
-                    <BriefcaseBusiness className="w-8 h-8 text-muted-foreground" />
-                  </div>
-                  <p className="text-sm text-text-secondary">
-                    You have not received any applications yet.
-                  </p>
-                </div>
-              </section>
+              <EmployerApplicationsSection />
             </div>
           </div>
         </main>

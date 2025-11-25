@@ -22,12 +22,12 @@ export function VerificationCard() {
           <p className="text-foreground mb-2">
             Only after verifying your user account can you publish job advertisements.
           </p>
-          <p className="text-muted-foreground">
+          {/* <p className="text-muted-foreground">
             <Link href="#" className="text-primary hover:underline">
               Click here
             </Link>
             , to resend the confirmation email.
-          </p>
+          </p> */}
 
           <Button 
             className="mt-4 bg-primary hover:bg-primary/90 text-primary-foreground"

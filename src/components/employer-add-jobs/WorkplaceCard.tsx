@@ -1,28 +1,51 @@
+"use client"
+
+import { useEffect, useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { MapPin } from "lucide-react"
 
-export function WorkplaceCard() {
+export type WorkplaceData = {
+  workplace: string
+  homeOffice: string
+}
+
+type WorkplaceCardProps = {
+  value?: WorkplaceData
+  onChange: (value: WorkplaceData) => void
+}
+
+export function WorkplaceCard({ value, onChange }: WorkplaceCardProps) {
+  const [workplace, setWorkplace] = useState(value?.workplace ?? "")
+  const [homeOffice, setHomeOffice] = useState(value?.homeOffice ?? "")
+
+  useEffect(() => {
+    onChange({
+      workplace,
+      homeOffice,
+    })
+  }, [workplace, homeOffice, onChange])
+
   return (
     <Card>
       <CardContent className="p-6">
         <div className="md:grid md:grid-cols-3 md:gap-8">
-          {/* Left Description Column */}
+
+          {/* Left Column */}
           <div className="mb-6 md:mb-0">
-            <h3 className="text-lg font-semibold text-foreground mb-3">WORKPLACE</h3>
-            <div className="text-sm text-muted-foreground space-y-3">
-              <p>If the vacancy is available at other locations, several work locations can also be stored here</p>
-              <p>
-                In order to inform applicants at which other locations the vacancy is available, there is the
-                possibility to store several locations.
-              </p>
-            </div>
+            <h3 className="text-lg font-semibold text-foreground mb-3">
+              WORKPLACE
+            </h3>
+            <p className="text-sm text-muted-foreground space-y-3">
+              Enter workplace location & specify home office options.
+            </p>
           </div>
 
-          {/* Right Form Column */}
+          {/* Right Column */}
           <div className="md:col-span-2 space-y-5">
+
             {/* Workplace */}
             <div className="space-y-2">
               <Label htmlFor="workplace" className="text-base font-semibold">
@@ -30,12 +53,21 @@ export function WorkplaceCard() {
               </Label>
               <div className="relative">
                 <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input id="workplace" placeholder="e.g. Munich" className="text-base pl-10" required />
+                <Input
+                  id="workplace"
+                  className="pl-10 text-base"
+                  placeholder="e.g. Munich"
+                  required
+                  value={workplace}
+                  onChange={(e) => setWorkplace(e.target.value)}
+                />
               </div>
-              <p className="text-sm text-muted-foreground">Enter the locations where the job is available.</p>
+              <p className="text-sm text-muted-foreground">
+                Enter the locations where the job is available.
+              </p>
             </div>
 
-            {/* Home office option */}
+            {/* Home office */}
             <div className="space-y-2">
               <Label htmlFor="home-office" className="text-base font-semibold">
                 Home office option
@@ -43,9 +75,9 @@ export function WorkplaceCard() {
 
               <select
                 id="home-office"
-                className="block w-full text-base h-11 px-3 rounded-md
-                          border border-input bg-background"
-                defaultValue=""
+                className="block w-full text-base h-11 px-3 rounded-md border border-input bg-background"
+                value={homeOffice}
+                onChange={(e) => setHomeOffice(e.target.value)}
               >
                 <option value="" disabled>Please select...</option>
                 <option value="100">100% Home office</option>
@@ -54,11 +86,9 @@ export function WorkplaceCard() {
               </select>
 
               <p className="text-sm text-muted-foreground">
-                Please inform about the home office options of this office.
+                Inform applicants about home office options.
               </p>
             </div>
-
-
 
           </div>
         </div>

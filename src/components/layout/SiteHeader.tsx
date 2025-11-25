@@ -30,7 +30,7 @@ export function SiteHeader() {
               Find an apprenticeship
             </Link>
             <Link
-              href="/jobs"
+              href="/public/jobs"
               className="text-gray-700 hover:text-gray-900 font-medium"
             >
               Find jobs

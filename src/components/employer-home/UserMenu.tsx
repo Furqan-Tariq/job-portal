@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { apiFetch } from "@/lib/api"
-
+import Link from "next/link"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -45,7 +45,7 @@ export function UserMenu() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button className="w-10 h-10 rounded-full bg-primary text-white font-semibold flex items-center justify-center hover:bg-primary-dark">
-          UF
+          
         </button>
       </DropdownMenuTrigger>
 
@@ -57,7 +57,9 @@ export function UserMenu() {
         <DropdownMenuSeparator />
 
         <DropdownMenuItem onClick={() => router.push("/employer/settings")}>
-          Settings
+          <Link href="/employer/settings">
+            Settings
+          </Link>
         </DropdownMenuItem>
 
         {/* LOGOUT BUTTON */}
