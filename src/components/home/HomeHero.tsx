@@ -30,14 +30,15 @@ export function HomeHero() {
             </h1>
 
             {/* SEARCH BAR — truly wide now */}
+            {/* SEARCH BAR — truly wide now */}
             <div className="max-w-7xl mx-auto w-full">
-              <div className="flex flex-col md:flex-row w-full overflow-hidden rounded-md border border-border bg-white shadow">
+              <div className="flex flex-col md:flex-row w-full overflow-hidden rounded-md border border-border bg-white shadow h-14">
                 {/* Search Input */}
                 <div className="flex-1 flex items-center">
                   <input
                     type="text"
                     placeholder="Enter search term"
-                    className="w-full px-6 py-4 text-base font-normal text-gray-800 placeholder:text-gray-400 focus:outline-none"
+                    className="h-full w-full px-6 text-base font-normal text-gray-800 placeholder:text-gray-400 focus:outline-none"
                   />
                 </div>
 
@@ -49,20 +50,20 @@ export function HomeHero() {
                   <input
                     type="text"
                     placeholder="Enter location"
-                    className="w-full px-6 py-4 text-base font-normal text-gray-800 placeholder:text-gray-400 focus:outline-none"
+                    className="h-full w-full px-6 text-base font-normal text-gray-800 placeholder:text-gray-400 focus:outline-none"
                   />
                 </div>
 
                 {/* Search Button */}
                 <Button
                   variant="primary"
-                  size="lg"
-                  className="whitespace-nowrap px-10 py-4 rounded-none md:rounded-l-none"
+                  className="whitespace-nowrap px-10 h-full rounded-none md:rounded-l-none"
                 >
                   Search
                 </Button>
               </div>
             </div>
+
           </div>
         </div>
       </section>
