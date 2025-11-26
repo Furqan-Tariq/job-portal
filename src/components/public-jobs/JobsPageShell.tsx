@@ -11,8 +11,13 @@ import { JobDetailPanel } from "./JobDetailPanel"
 import { JobsPagination } from "./JobsPagination"
 
 export type HomeOfficeOption = "Any" | "On-site" | "Hybrid" | "Remote"
-export type EmploymentType = "Any" | "Full-time" | "Part-time" | "Mini-job"
-export type Industry = "Any" | "Health service" | "Finance" | "Retail" | "Tourism, hospitality and gastronomy"
+export type EmploymentType = "Any" | "Full-time" | "Part-time" | "Apprenticeship"
+export type Industry =
+  | "Any"
+  | "Health service"
+  | "Finance"
+  | "Retail"
+  | "Tourism, hospitality and gastronomy"
 export type Discipline = "Any" | "Sales" | "Nursing" | "IT" | "Medicine"
 export type WorkExperience = "Any" | "No experience" | "1-3 years" | "3-5 years" | "5+ years"
 export type EnterpriseSize = "Any" | "Small" | "Medium" | "Large"
@@ -44,7 +49,7 @@ export type Job = {
   expirationDate?: string
 }
 
-// 🔁 Map backend job → frontend Job type
+// map API job → Job
 function mapApiJobToJob(apiJob: any): Job {
   const title: string = apiJob.title ?? "Untitled job"
 
@@ -54,7 +59,7 @@ function mapApiJobToJob(apiJob: any): Job {
     "Unknown company"
 
   const city: string = apiJob.workplace_location ?? ""
-  const country: string = "Germany" // fallback for now
+  const country: string = "Germany"
 
   const street: string = ""
   const zip: string = ""
@@ -62,7 +67,6 @@ function mapApiJobToJob(apiJob: any): Job {
   const location =
     city && country ? `${city}, ${country}` : city || "Location not specified"
 
-  // home_office → HomeOfficeOption
   const rawHomeOffice = String(apiJob.home_office ?? "").toLowerCase()
   let homeOfficeOption: HomeOfficeOption = "Any"
   if (rawHomeOffice.includes("remote")) {
@@ -77,7 +81,6 @@ function mapApiJobToJob(apiJob: any): Job {
     homeOfficeOption = "On-site"
   }
 
-  // employment_types[0] → EmploymentType
   const rawEmploymentType =
     Array.isArray(apiJob.employment_types) && apiJob.employment_types.length > 0
       ? String(apiJob.employment_types[0]).toLowerCase()
@@ -87,11 +90,10 @@ function mapApiJobToJob(apiJob: any): Job {
     employmentType = "Full-time"
   } else if (rawEmploymentType.includes("part")) {
     employmentType = "Part-time"
-  } else if (rawEmploymentType.includes("mini")) {
-    employmentType = "Mini-job"
+  } else if (rawEmploymentType.includes("apprent")) {
+    employmentType = "Apprenticeship"
   }
 
-  // professional_discipline → Discipline
   const rawDiscipline = String(apiJob.professional_discipline ?? "").toLowerCase()
   let discipline: Discipline = "Any"
   if (rawDiscipline.includes("sales")) {
@@ -104,10 +106,8 @@ function mapApiJobToJob(apiJob: any): Job {
     discipline = "Medicine"
   }
 
-  // There is no real industry field in the payload yet – keep "Any"
   const industry: Industry = "Any"
 
-  // professional_experience → WorkExperience
   const rawExperience = String(apiJob.professional_experience ?? "").toLowerCase()
   let workExperience: WorkExperience = "Any"
   if (rawExperience.includes("no") || rawExperience.includes("entry")) {
@@ -120,7 +120,6 @@ function mapApiJobToJob(apiJob: any): Job {
     workExperience = "5+ years"
   }
 
-  // Salary: min_salary / max_salary + salary_unit
   const minSalary = apiJob.min_salary
   const maxSalary = apiJob.max_salary
   const salaryUnitRaw: string = apiJob.salary_unit ?? ""
@@ -150,10 +149,7 @@ function mapApiJobToJob(apiJob: any): Job {
   const isTopJob: boolean = false
   const isExpressApplication: boolean = false
 
-  const logoSrc: string | undefined =
-    apiJob.company_logo ??
-    undefined
-
+  const logoSrc: string | undefined = apiJob.company_logo ?? undefined
   const headerImageSrc: string | undefined = undefined
 
   return {
@@ -195,13 +191,22 @@ export function JobsPageShell() {
   const [workExperienceFilter, setWorkExperienceFilter] = useState<WorkExperience>("Any")
   const [enterpriseSizeFilter, setEnterpriseSizeFilter] = useState<EnterpriseSize>("Any")
 
-  // 🔁 Read ?location= from URL on the client only
+  // ✅ Read query params on client (location + employmentType)
   useEffect(() => {
     if (typeof window === "undefined") return
     const params = new URLSearchParams(window.location.search)
+
     const loc = params.get("location")
     if (loc) {
       setLocationTerm(loc)
+    }
+
+    const emp = params.get("employmentType")
+    if (emp) {
+      const allowed: EmploymentType[] = ["Any", "Full-time", "Part-time", "Apprenticeship"]
+      if (allowed.includes(emp as EmploymentType)) {
+        setEmploymentTypeFilter(emp as EmploymentType)
+      }
     }
   }, [])
 
@@ -221,8 +226,6 @@ export function JobsPageShell() {
 
       try {
         const data = await apiFetch(`/jobs/public?page=${currentPage}`)
-
-        // 👀 log entire API result once per request
         console.log("Public jobs API response:", data)
 
         let apiJobs: any[] = []
@@ -269,7 +272,6 @@ export function JobsPageShell() {
 
   const filteredJobs = useMemo(() => {
     return jobs.filter((job) => {
-      // Search term
       if (searchTerm) {
         const search = searchTerm.toLowerCase()
         const matchesTitle = job.title.toLowerCase().includes(search)
@@ -277,7 +279,6 @@ export function JobsPageShell() {
         if (!matchesTitle && !matchesCompany) return false
       }
 
-      // Location filter
       if (locationTerm) {
         const location = locationTerm.toLowerCase()
         const matchesCity = job.city.toLowerCase().includes(location)
@@ -285,7 +286,6 @@ export function JobsPageShell() {
         if (!matchesCity && !matchesLocation) return false
       }
 
-      // Dropdown filters
       if (homeOfficeFilter !== "Any" && job.homeOfficeOption !== homeOfficeFilter) return false
       if (employmentTypeFilter !== "Any" && job.employmentType !== employmentTypeFilter) return false
       if (industryFilter !== "Any" && job.industry !== industryFilter) return false
@@ -309,7 +309,6 @@ export function JobsPageShell() {
 
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null)
 
-  // keep selected job in sync with filtered list
   useEffect(() => {
     if (filteredJobs.length === 0) {
       setSelectedJobId(null)
@@ -341,7 +340,6 @@ export function JobsPageShell() {
   return (
     <main className="min-h-[calc(100vh-160px)] bg-muted py-8">
       <section className="container-custom max-w-7xl mx-auto space-y-8">
-        {/* Title */}
         <div className="text-center space-y-2">
           <h1 className="text-4xl font-bold tracking-tight">
             {filteredJobs.length.toLocaleString()} Jobs
@@ -351,7 +349,6 @@ export function JobsPageShell() {
           </p>
         </div>
 
-        {/* Search + Filters */}
         <JobsSearchFilters
           searchTerm={searchTerm}
           onSearchTermChange={setSearchTerm}
@@ -372,9 +369,7 @@ export function JobsPageShell() {
           onSubmitSearch={handleSubmitSearch}
         />
 
-        {/* Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,0.4fr)_minmax(0,0.6fr)] gap-6">
-          {/* Left: list */}
           <div className="space-y-4">
             <JobAlertBanner />
 
@@ -404,7 +399,6 @@ export function JobsPageShell() {
             />
           </div>
 
-          {/* Right: detail */}
           <JobDetailPanel job={selectedJob} />
         </div>
       </section>

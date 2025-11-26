@@ -76,7 +76,7 @@ export function HomeBannerStrip() {
         <h2 className="text-2xl md:text-3xl font text-black mb-6">
           Job board for Oberland{" "}
           <span className="font-bold text-white">
-            Regional job offers, apprenticeships and mini-jobs
+            Regional job offers, apprenticeships and Apprenticeship
           </span>
         </h2>
 

@@ -42,7 +42,7 @@ const EMPLOYMENT_TYPE_OPTIONS = [
   "Any type of employment",
   "Full-time",
   "Part-time",
-  "Mini-job",
+  "Apprenticeship",
 ]
 
 const WORKFLOW_OPTIONS = [

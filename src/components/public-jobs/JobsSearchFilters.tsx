@@ -105,7 +105,7 @@ export function JobsSearchFilters({
             <SelectItem value="Any">Type of Employment</SelectItem>
             <SelectItem value="Full-time">Full-time</SelectItem>
             <SelectItem value="Part-time">Part-time</SelectItem>
-            <SelectItem value="Mini-job">Mini-job</SelectItem>
+            <SelectItem value="Apprenticeship">Apprenticeship</SelectItem>
           </SelectContent>
         </Select>
 

@@ -22,7 +22,7 @@ export interface Job {
   employerLogo: string
   location: string
   slug: string
-  type: 'full-time' | 'part-time' | 'mini-job' | 'apprenticeship'
+  type: 'full-time' | 'part-time' |  'apprenticeship'
   postedDate: string
 }
 

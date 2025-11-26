@@ -38,7 +38,7 @@ function mapApiJobToHomeJob(apiJob: any): Job {
   if (rawType.includes("part")) {
     type = "part-time"
   } else if (rawType.includes("mini")) {
-    type = "mini-job"
+    type = "full-time"
   } else if (rawType.includes("apprent")) {
     type = "apprenticeship"
   }
