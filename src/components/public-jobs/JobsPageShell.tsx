@@ -3,6 +3,7 @@
 import type React from "react"
 
 import { useState, useMemo, useEffect } from "react"
+import { useSearchParams } from "next/navigation"
 import { apiFetch } from "@/lib/api"
 import { JobsSearchFilters } from "./JobsSearchFilters"
 import { JobAlertBanner } from "./JobAlertBanner"
@@ -54,7 +55,7 @@ function mapApiJobToJob(apiJob: any): Job {
     "Unknown company"
 
   const city: string = apiJob.workplace_location ?? ""
-  const country: string = "Germany" // fallback for now
+  const country: string = "Germany"
 
   const street: string = ""
   const zip: string = ""
@@ -104,7 +105,7 @@ function mapApiJobToJob(apiJob: any): Job {
     discipline = "Medicine"
   }
 
-  // There is no real industry field in the payload yet – keep "Any"
+  // industry – none in payload yet
   const industry: Industry = "Any"
 
   // professional_experience → WorkExperience
@@ -120,7 +121,7 @@ function mapApiJobToJob(apiJob: any): Job {
     workExperience = "5+ years"
   }
 
-  // Salary: min_salary / max_salary + salary_unit
+  // Salary: min_salary / max_salary
   const minSalary = apiJob.min_salary
   const maxSalary = apiJob.max_salary
   const salaryUnitRaw: string = apiJob.salary_unit ?? ""
@@ -134,7 +135,6 @@ function mapApiJobToJob(apiJob: any): Job {
   } else if (maxSalary != null) {
     salaryText = `Up to €${maxSalary}`
   }
-
 
   const teaser: string =
     apiJob.description ??
@@ -151,10 +151,7 @@ function mapApiJobToJob(apiJob: any): Job {
   const isTopJob: boolean = false
   const isExpressApplication: boolean = false
 
-  const logoSrc: string | undefined =
-    apiJob.company_logo ??
-    undefined
-
+  const logoSrc: string | undefined = apiJob.company_logo ?? undefined
   const headerImageSrc: string | undefined = undefined
 
   return {
@@ -186,9 +183,12 @@ function mapApiJobToJob(apiJob: any): Job {
 }
 
 export function JobsPageShell() {
+  const searchParams = useSearchParams()
+  const initialLocation = searchParams.get("location") ?? ""
+
   // filters
   const [searchTerm, setSearchTerm] = useState("")
-  const [locationTerm, setLocationTerm] = useState("")
+  const [locationTerm, setLocationTerm] = useState(initialLocation)
   const [homeOfficeFilter, setHomeOfficeFilter] = useState<HomeOfficeOption>("Any")
   const [employmentTypeFilter, setEmploymentTypeFilter] = useState<EmploymentType>("Any")
   const [industryFilter, setIndustryFilter] = useState<Industry>("Any")
@@ -212,8 +212,6 @@ export function JobsPageShell() {
 
       try {
         const data = await apiFetch(`/jobs/public?page=${currentPage}`)
-
-        // 👀 log entire API result once per request
         console.log("Public jobs API response:", data)
 
         let apiJobs: any[] = []

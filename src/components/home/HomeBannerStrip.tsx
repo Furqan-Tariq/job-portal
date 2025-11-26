@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import Link from "next/link"
 import { apiFetch } from "@/lib/api"
 import type { Region } from "@/lib/types"
 
@@ -19,7 +20,7 @@ export function HomeBannerStrip() {
 
         let items: any[] = []
 
-        // ✅ your API shape: { locations: ["ddddddddddd", "Munich"] }
+        // API shape: { locations: ["ddddddddddd", "Munich"] }
         if (data && Array.isArray(data.locations)) {
           items = data.locations
         } else if (Array.isArray(data)) {
@@ -29,7 +30,6 @@ export function HomeBannerStrip() {
         }
 
         const mapped: Region[] = items.map((loc: any, idx: number) => {
-          // if loc is just a string (like "Munich")
           const name = typeof loc === "string" ? loc : loc.name ?? "Unknown"
           const id = String(typeof loc === "string" ? idx : loc.id ?? idx)
 
@@ -80,7 +80,7 @@ export function HomeBannerStrip() {
           </span>
         </h2>
 
-      <div className="flex flex-wrap gap-3">
+        <div className="flex flex-wrap gap-3">
           {loading && (
             <span className="text-white text-sm opacity-70">
               Loading regions...
@@ -95,12 +95,13 @@ export function HomeBannerStrip() {
 
           {!loading &&
             regions.map((region) => (
-              <button
+              <Link
                 key={region.id}
+                href={`/public/jobs?location=${encodeURIComponent(region.name)}`}
                 className="bg-white text-gray-800 px-5 py-2.5 rounded-full font-medium hover:bg-gray-100 transition-colors duration-200"
               >
                 Jobs in {region.name}
-              </button>
+              </Link>
             ))}
         </div>
       </div>
