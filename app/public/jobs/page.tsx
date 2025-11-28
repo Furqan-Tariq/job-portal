@@ -1,4 +1,4 @@
-import { JobsPageShell } from "@/components/public-jobs/JobsPageShell"
+import { JobsPageShell } from "@/components/public/public-jobs/JobsPageShell"
 
 export default function JobsPage() {
   return <JobsPageShell />

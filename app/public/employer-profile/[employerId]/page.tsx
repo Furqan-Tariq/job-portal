@@ -1,11 +1,11 @@
 // app/public/employer-profile/[employerId]/page.tsx
 
-import { EmployerProfileHero } from "@/components/public-employer-profile/EmployerProfileHero"
-import { EmployerAboutCard } from "@/components/public-employer-profile/EmployerAboutCard"
-import { EmployerContactCard } from "@/components/public-employer-profile/EmployerContactCard"
-import { EmployerBenefitsCard } from "@/components/public-employer-profile/EmployerBenefitsCard"
-import { EmployerPicturesGallery } from "@/components/public-employer-profile/EmployerPicturesGallery"
-import { EmployerJobsList } from "@/components/public-employer-profile/EmployerJobsList"
+import { EmployerProfileHero } from "@/components/public/public-employer-profile/EmployerProfileHero"
+import { EmployerAboutCard } from "@/components/public/public-employer-profile/EmployerAboutCard"
+import { EmployerContactCard } from "@/components/public/public-employer-profile/EmployerContactCard"
+import { EmployerBenefitsCard } from "@/components/public/public-employer-profile/EmployerBenefitsCard"
+import { EmployerPicturesGallery } from "@/components/public/public-employer-profile/EmployerPicturesGallery"
+import { EmployerJobsList } from "@/components/public/public-employer-profile/EmployerJobsList"
 import { apiFetch } from "@/lib/api"
 import Link from "next/link"
 import Image from "next/image"

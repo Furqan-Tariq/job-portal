@@ -1,6 +1,6 @@
 // app/employer/jobs/[jobId]/edit/page.tsx
 
-import { EditJobForm } from "@/components/employer-edit-jobs/EditJobForm"
+import { EditJobForm } from "@/components/employer/employer-edit-jobs/EditJobForm"
 
 type PageProps = {
   params: { jobId: string }

@@ -1,4 +1,4 @@
-import { JobDetailLayout } from "@/components/job-details/JobDetailPage"
+import { JobDetailLayout } from "@/components/public/job-details/JobDetailPage"
 
 // Type definition for job detail data – aligned with backend
 export type JobDetail = {

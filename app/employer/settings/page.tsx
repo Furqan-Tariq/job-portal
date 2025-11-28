@@ -1,8 +1,8 @@
 "use client"
 
 import { FormEvent, useState } from "react"
-import { EmployerHeader } from "@/components/employer-home/EmployerHeader"
-import { EmployerFooter } from "@/components/employer-home/EmployerFooter"
+import { EmployerHeader } from "@/components/employer/employer-home/EmployerHeader"
+import { EmployerFooter } from "@/components/employer/employer-home/EmployerFooter"
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"

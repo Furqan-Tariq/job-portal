@@ -9,12 +9,12 @@ export function Footer() {
             <h3 className="font-bold text-lg mb-4">APPLICANT</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/search" className="text-gray-300 hover:text-white">
+                <Link href="/public/jobs" className="text-gray-300 hover:text-white">
                   Search Jobs
                 </Link>
               </li>
               <li>
-                <Link href="/companies" className="text-gray-300 hover:text-white">
+                <Link href="/public/employer-list" className="text-gray-300 hover:text-white">
                   Discover companies
                 </Link>
               </li>
@@ -25,17 +25,17 @@ export function Footer() {
             <h3 className="font-bold text-lg mb-4">EMPLOYER</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/post-job" className="text-gray-300 hover:text-white">
+                <Link href="/employer/login" className="text-gray-300 hover:text-white">
                   Post a job ad
                 </Link>
               </li>
               <li>
-                <Link href="/prices" className="text-gray-300 hover:text-white">
+                <Link href="/employer/login" className="text-gray-300 hover:text-white">
                   Products & Prices
                 </Link>
               </li>
               <li>
-                <Link href="/profile" className="text-gray-300 hover:text-white">
+                <Link href="/employer/profile" className="text-gray-300 hover:text-white">
                   My Employer Profile
                 </Link>
               </li>

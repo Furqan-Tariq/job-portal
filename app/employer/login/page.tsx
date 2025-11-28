@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react"
 import { Eye, EyeOff, LogIn, CheckCircle2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { apiFetch } from "@/lib/api"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { z } from "zod"
@@ -12,6 +11,8 @@ const loginSchema = z.object({
   login: z.string().min(1, "Please enter your e-mail address or username."),
   password: z.string().min(1, "Please enter your password."),
 })
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 
 export default function EmployerLoginPage() {
   const router = useRouter()
@@ -76,66 +77,85 @@ export default function EmployerLoginPage() {
     setIsSubmitting(true)
 
     try {
-      // apiFetch should return parsed JSON or throw on non-2xx
-      const res = await apiFetch("/login", {
+      if (!API_BASE_URL) {
+        throw new Error("API base URL is not configured.")
+      }
+
+      // ⛔️ NOT using apiFetch here – use raw fetch so 401 doesn't auto-redirect
+      const res = await fetch(`${API_BASE_URL}/login`, {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
         body: JSON.stringify(payload),
       })
 
+      let data: any = null
+      try {
+        data = await res.json()
+      } catch {
+        // ignore parse errors
+      }
+
+      if (!res.ok) {
+        const messageFromApi =
+          (data && typeof data.message === "string" && data.message) ||
+          (res.status === 401
+            ? "Invalid credentials. Please try again."
+            : "Something went wrong. Please try again.")
+
+        throw new Error(messageFromApi)
+      }
+
+      // 🔎 Determine primary role from res.user.role_names[0]
+      const roleNames: string[] = Array.isArray(data?.user?.role_names)
+        ? data.user.role_names
+        : []
+
+      const primaryRole = roleNames[0] || "employer" // fallback
+
       // Save JWT token (if backend returns it)
-      if (res?.token) {
-        // Optional: keep using localStorage if the rest of your app expects it
+      if (data?.token) {
         try {
-          localStorage.setItem("token", res.token)
+          localStorage.setItem("token", data.token)
         } catch {
           // ignore localStorage errors (SSR / disabled)
         }
 
-        // 🔐 IMPORTANT: also set a cookie so middleware.ts can see it
-        // 2 hours = 7200 seconds
+        // 🔐 IMPORTANT: set role-specific cookie so middleware can differentiate
         const maxAgeSeconds = 60 * 60 * 2
-        document.cookie = `token=${encodeURIComponent(
-          res.token,
-        )}; Max-Age=${maxAgeSeconds}; Path=/`
+        const cookieName =
+          primaryRole === "admin" ? "admin_token" : "employer_token"
+
+        if (typeof document !== "undefined") {
+          if (primaryRole === "admin") {
+            document.cookie = "employer_token=; Max-Age=0; Path=/"
+          } else {
+            document.cookie = "admin_token=; Max-Age=0; Path=/"
+          }
+
+          document.cookie = `${cookieName}=${encodeURIComponent(
+            data.token,
+          )}; Max-Age=${maxAgeSeconds}; Path=/`
+        }
+      }
+
+      // 🎯 Decide default home based on role
+      let defaultHome = "/employer/home"
+      if (primaryRole === "admin") {
+        defaultHome = "/admin/home"
       }
 
       setSuccess("Login successful! Redirecting...")
       setError(null)
 
-      // Respect ?redirectTo=... from middleware, fallback to /employer/home
-      const target = redirectTo || "/employer/home"
+      // Respect ?redirectTo=... from middleware, fallback to role-based home
+      const target = redirectTo || defaultHome
       router.push(target)
     } catch (err: any) {
       console.error("Login failed:", err)
-
-      let message = "Something went wrong. Please try again."
-
-      // 1) If apiFetch attached a parsed body
-      if (err?.body?.message && typeof err.body.message === "string") {
-        message = err.body.message
-      }
-      // 2) If status is available
-      else if (err?.status === 401) {
-        message = "Invalid credentials. Please try again."
-      } else if (err?.status === 403) {
-        message = "Your account is inactive. Please contact support."
-      }
-      // 3) Try to parse Error.message as JSON: {"message":"Invalid credentials"}
-      else if (typeof err?.message === "string") {
-        try {
-          const parsed = JSON.parse(err.message)
-          if (parsed?.message && typeof parsed.message === "string") {
-            message = parsed.message
-          } else {
-            message = err.message
-          }
-        } catch {
-          // err.message is just a string, use it as-is
-          message = err.message
-        }
-      }
-
-      setError(message)
+      setError(err?.message || "Something went wrong. Please try again.")
       setSuccess(null)
     } finally {
       setIsSubmitting(false)
@@ -249,13 +269,6 @@ export default function EmployerLoginPage() {
                 >
                   Register now and create a free employer profile!
                 </Link>
-              </p>
-
-              <p className="text-sm text-text-secondary">
-                Forgot your password?{" "}
-                <a href="#" className="text-primary font-semibold hover:underline">
-                  Reset your password.
-                </a>
               </p>
             </div>
           </div>

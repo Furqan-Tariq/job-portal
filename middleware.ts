@@ -4,8 +4,11 @@ import type { NextRequest } from "next/server"
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
-  const token = request.cookies.get("token")?.value
 
+  const employerToken = request.cookies.get("employer_token")?.value
+  const adminToken = request.cookies.get("admin_token")?.value
+
+  // 🔹 EMPLOYER AREA
   if (pathname.startsWith("/employer")) {
     const publicEmployerPaths = [
       "/employer/login",
@@ -18,14 +21,39 @@ export function middleware(request: NextRequest) {
     )
 
     if (isPublic) {
-      // Optional: prevent logged-in users from seeing login/register again
-      if (token && pathname.startsWith("/employer/login")) {
+      // Optional: prevent logged-in employers from seeing login/register again
+      if (employerToken && pathname.startsWith("/employer/login")) {
         return NextResponse.redirect(new URL("/employer/home", request.url))
       }
       return NextResponse.next()
     }
 
-    if (!token) {
+    // ❌ No employer cookie → force employer login
+    if (!employerToken) {
+      const loginUrl = new URL("/employer/login", request.url)
+      loginUrl.searchParams.set("redirectTo", pathname + request.nextUrl.search)
+      return NextResponse.redirect(loginUrl)
+    }
+  }
+
+  // 🔹 ADMIN AREA
+  if (pathname.startsWith("/admin")) {
+    const publicAdminPaths = ["/admin/login"]
+
+    const isPublic = publicAdminPaths.some((publicPath) =>
+      pathname.startsWith(publicPath),
+    )
+
+    if (isPublic) {
+      // Optional: prevent logged-in admins from seeing login again
+      if (adminToken && pathname.startsWith("/admin/login")) {
+        return NextResponse.redirect(new URL("/admin/home", request.url))
+      }
+      return NextResponse.next()
+    }
+
+    // ❌ No admin cookie → force admin login
+    if (!adminToken) {
       const loginUrl = new URL("/employer/login", request.url)
       loginUrl.searchParams.set("redirectTo", pathname + request.nextUrl.search)
       return NextResponse.redirect(loginUrl)
@@ -36,5 +64,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/employer/:path*"],
+  matcher: ["/employer/:path*", "/admin/:path*"],
 }

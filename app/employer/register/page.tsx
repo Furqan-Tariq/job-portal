@@ -4,9 +4,9 @@ import { useState } from "react"
 import { Briefcase } from "lucide-react"
 import { useRouter } from "next/navigation"
 
-import { EmployerCredentialsForm } from "@/components/employer-register/EmployerCredentialsForm"
-import { EmployerUserInfoForm } from "@/components/employer-register/EmployerUserInfoForm"
-import { EmployerCompanyInfoForm } from "@/components/employer-register/EmployerCompanyInfoForm"
+import { EmployerCredentialsForm } from "@/components/employer/employer-register/EmployerCredentialsForm"
+import { EmployerUserInfoForm } from "@/components/employer/employer-register/EmployerUserInfoForm"
+import { EmployerCompanyInfoForm } from "@/components/employer/employer-register/EmployerCompanyInfoForm"
 import { apiFetch } from "@/lib/api"
 
 export default function EmployerRegisterPage() {

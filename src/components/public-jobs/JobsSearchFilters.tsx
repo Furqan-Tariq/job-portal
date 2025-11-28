@@ -13,7 +13,7 @@ import type {
   Discipline,
   WorkExperience,
   EnterpriseSize,
-} from "./JobsPageShell"
+} from "@/components/public/public-jobs/JobsPageShell"
 
 type JobsSearchFiltersProps = {
   searchTerm: string

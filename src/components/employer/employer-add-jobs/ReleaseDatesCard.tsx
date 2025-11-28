@@ -1,0 +1,87 @@
+"use client"
+
+import { useEffect, useState } from "react"
+import { Card, CardContent } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+
+export type ReleaseDatesData = {
+  releaseDate: string
+  expirationDate: string
+}
+
+type ReleaseDatesCardProps = {
+  value?: ReleaseDatesData
+  onChange: (value: ReleaseDatesData) => void
+}
+
+export function ReleaseDatesCard({ value, onChange }: ReleaseDatesCardProps) {
+  const [releaseDate, setReleaseDate] = useState(value?.releaseDate ?? "")
+  const [expirationDate, setExpirationDate] = useState(value?.expirationDate ?? "")
+
+  // Sync to parent
+  useEffect(() => {
+    onChange({
+      releaseDate,
+      expirationDate,
+    })
+  }, [releaseDate, expirationDate, onChange])
+
+  return (
+    <Card>
+      <CardContent className="p-6">
+        <div className="md:grid md:grid-cols-3 md:gap-8">
+          
+          {/* Left Description Column */}
+          <div className="mb-6 md:mb-0">
+            <h3 className="text-lg font-semibold text-foreground mb-3">
+              RELEASE DATE &amp; DURATION
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              Provide information about the publication date and duration of the job advertisement.
+            </p>
+          </div>
+
+          {/* Right Form Column */}
+          <div className="md:col-span-2 space-y-5">
+
+            {/* Release date */}
+            <div className="space-y-2">
+              <Label htmlFor="release-date" className="text-base font-semibold">
+                Release date
+              </Label>
+              <Input
+                id="release-date"
+                type="date"
+                className="text-base w-full sm:w-[220px]"
+                value={releaseDate}
+                onChange={(e) => setReleaseDate(e.target.value)}
+              />
+              <p className="text-sm text-muted-foreground">
+                Select when the job ad should be published.
+              </p>
+            </div>
+
+            {/* Expiration date */}
+            <div className="space-y-2">
+              <Label htmlFor="expiration-date" className="text-base font-semibold">
+                Expiration date
+              </Label>
+              <Input
+                id="expiration-date"
+                type="date"
+                className="text-base w-full sm:w-[220px]"
+                value={expirationDate}
+                onChange={(e) => setExpirationDate(e.target.value)}
+              />
+              <p className="text-sm text-muted-foreground">
+                Select when the job should go offline.
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}

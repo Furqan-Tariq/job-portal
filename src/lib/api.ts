@@ -8,33 +8,51 @@ type ApiError = {
 }
 
 // Helper to read the `token` from cookies (client-side only)
+// Helper to read the token from cookies (client-side only)
 function getTokenFromCookies(): string | null {
   if (typeof document === "undefined") return null
 
-  const match = document.cookie.match(
-    /(?:^|; )token=([^;]*)/
-  )
-  return match ? decodeURIComponent(match[1]) : null
+  // ✅ Prefer admin_token if present
+  const adminMatch = document.cookie.match(/(?:^|; )admin_token=([^;]*)/)
+  if (adminMatch) {
+    return decodeURIComponent(adminMatch[1])
+  }
+
+  // ✅ Fallback to employer_token
+  const employerMatch = document.cookie.match(/(?:^|; )employer_token=([^;]*)/)
+  if (employerMatch) {
+    return decodeURIComponent(employerMatch[1])
+  }
+
+  // Optional: legacy token fallback (if you still ever set it)
+  const legacyMatch = document.cookie.match(/(?:^|; )token=([^;]*)/)
+  if (legacyMatch) {
+    return decodeURIComponent(legacyMatch[1])
+  }
+
+  return null
 }
+
 
 // Helper to clear all auth on the client
 function clearAuthClientSide() {
   if (typeof window === "undefined") return
 
   try {
-    // Remove cookie
-    document.cookie = "token=; Max-Age=0; Path=/"
+    document.cookie = "admin_token=; Max-Age=0; Path=/"
+    document.cookie = "employer_token=; Max-Age=0; Path=/"
+    document.cookie = "token=; Max-Age=0; Path=/" // legacy
   } catch {
     // ignore
   }
 
   try {
-    // Remove localStorage token (legacy)
     window.localStorage.removeItem("token")
   } catch {
     // ignore
   }
 }
+
 
 export async function apiFetch(
   path: string,

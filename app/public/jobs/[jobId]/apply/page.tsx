@@ -1,4 +1,4 @@
-import { JobApplicationForm } from "@/components/apply/JobApplicationForm"
+import { JobApplicationForm } from "@/components/public/apply/JobApplicationForm"
 import { apiFetch } from "@/lib/api"
 
 type PageProps = {

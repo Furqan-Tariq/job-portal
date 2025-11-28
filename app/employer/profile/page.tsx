@@ -1,13 +1,13 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
-import { EmployerSidebar } from "@/components/employer-home/EmployerSidebar"
-import { EmployerHeader } from "@/components/employer-home/EmployerHeader"
-import { EmployerFooter } from "@/components/employer-home/EmployerFooter"
-import { EmployerProfileHeaderCard } from "@/components/employer-profile/EmployerProfileHeaderCard"
-import { EmployerAboutCard } from "@/components/employer-profile/EmployerAboutCard"
+import { EmployerSidebar } from "@/components/employer/employer-home/EmployerSidebar"
+import { EmployerHeader } from "@/components/employer/employer-home/EmployerHeader"
+import { EmployerFooter } from "@/components/employer/employer-home/EmployerFooter"
+import { EmployerProfileHeaderCard } from "@/components/employer/employer-profile/EmployerProfileHeaderCard"
+import { EmployerAboutCard } from "@/components/employer/employer-profile/EmployerAboutCard"
 // import { EmployerContactCard } from "@/components/employer-profile/EmployerContactCard"
-import { EmployerAttachmentsCard } from "@/components/employer-profile/EmployerAttachmentsCard"
+import { EmployerAttachmentsCard } from "@/components/employer/employer-profile/EmployerAttachmentsCard"
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
 

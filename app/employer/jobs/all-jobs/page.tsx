@@ -1,9 +1,9 @@
 // app/employer/jobs/all-jobs/page.tsx
 
-import { EmployerSidebar } from "@/components/employer-home/EmployerSidebar"
-import { EmployerHeader } from "@/components/employer-home/EmployerHeader"
-import { EmployerFooter } from "@/components/employer-home/EmployerFooter"
-import { AllJobsPageShell } from "@/components/all-jobs/AllJobsPageShell"
+import { EmployerSidebar } from "@/components/employer/employer-home/EmployerSidebar"
+import { EmployerHeader } from "@/components/employer/employer-home/EmployerHeader"
+import { EmployerFooter } from "@/components/employer/employer-home/EmployerFooter"
+import { AllJobsPageShell } from "@/components/employer/all-jobs/AllJobsPageShell"
 
 export default function AllJobsPage() {
   return (
